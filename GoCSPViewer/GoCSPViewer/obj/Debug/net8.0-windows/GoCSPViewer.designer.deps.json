@@ -1,0 +1,214 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.8": {
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.826.23019"
+          }
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/10.0.8": {
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.8",
+          "System.Diagnostics.DiagnosticSource": "10.0.8"
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.826.23019"
+          }
+        }
+      },
+      "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+        "runtime": {
+          "lib/net6.0/Microsoft.IO.RecyclableMemoryStream.dll": {
+            "assemblyVersion": "3.0.1.0",
+            "fileVersion": "3.0.1.0"
+          }
+        }
+      },
+      "Microsoft.Msagl/1.1.6": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Msagl.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Microsoft.Msagl.Drawing/1.1.6": {
+        "dependencies": {
+          "Microsoft.Msagl": "1.1.6"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Msagl.Drawing.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Microsoft.Msagl.GraphViewerGDI/1.1.7": {
+        "dependencies": {
+          "Microsoft.Msagl.Drawing": "1.1.6"
+        },
+        "runtime": {
+          "lib/net7.0-windows7.0/Microsoft.Msagl.GraphViewerGdi.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Msagl/1.2.1": {
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Msagl.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Msagl.Drawing/1.2.1": {
+        "dependencies": {
+          "Msagl": "1.2.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Msagl.Drawing.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Msagl.WpfGraphControl/1.2.1": {
+        "dependencies": {
+          "Msagl.Drawing": "1.2.1"
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/Microsoft.Msagl.WpfGraphControl.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "System.Diagnostics.DiagnosticSource/10.0.8": {
+        "runtime": {
+          "lib/net8.0/System.Diagnostics.DiagnosticSource.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.826.23019"
+          }
+        }
+      },
+      "System.Reactive/6.1.0": {
+        "runtime": {
+          "lib/net6.0/System.Reactive.dll": {
+            "assemblyVersion": "6.1.0.0",
+            "fileVersion": "6.1.0.62682"
+          }
+        }
+      },
+      "Websocket.Client/5.4.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.8",
+          "Microsoft.IO.RecyclableMemoryStream": "3.0.1",
+          "System.Reactive": "6.1.0"
+        },
+        "runtime": {
+          "lib/net8.0/Websocket.Client.dll": {
+            "assemblyVersion": "5.4.0.0",
+            "fileVersion": "5.4.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-21nbDV60SRPWGIivsyl6lqBeEJNG1sginhhfWgRrr3Ais7aQ12To25OAHQxgoiJkjqy1aQ6RxpZBGYuTi7Ge6A==",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/10.0.8",
+      "hashPath": "microsoft.extensions.dependencyinjection.abstractions.10.0.8.nupkg.sha512"
+    },
+    "Microsoft.Extensions.Logging.Abstractions/10.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fdVadZmsC8jRP0KvKy8mO8f6GV/HyBvElfcSxEhd+5FM5boAw/01iSaCto5G3G37ApJira4A3pNaVvBv8cUiLQ==",
+      "path": "microsoft.extensions.logging.abstractions/10.0.8",
+      "hashPath": "microsoft.extensions.logging.abstractions.10.0.8.nupkg.sha512"
+    },
+    "Microsoft.IO.RecyclableMemoryStream/3.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-s/s20YTVY9r9TPfTrN5g8zPF1YhwxyqO6PxUkrYTGI2B+OGPe9AdajWZrLhFqXIvqIW23fnUE4+ztrUWNU1+9g==",
+      "path": "microsoft.io.recyclablememorystream/3.0.1",
+      "hashPath": "microsoft.io.recyclablememorystream.3.0.1.nupkg.sha512"
+    },
+    "Microsoft.Msagl/1.1.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Fqxj+pmZEo/H2z/LEMFSmtt6GrSj2FKZfz15HhTQRhYRpdewFaC5mPIUxkzELJTac/hbUDb28QBjG/w0JbG2wg==",
+      "path": "microsoft.msagl/1.1.6",
+      "hashPath": "microsoft.msagl.1.1.6.nupkg.sha512"
+    },
+    "Microsoft.Msagl.Drawing/1.1.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xKEOHGDEzf1ulz7GISBxnjsqSl5+YhMhZ1I/UU7GMUkFtrwuShVg+irAZiZeK9VQRePXWeFWVhBlxrc3XulXNQ==",
+      "path": "microsoft.msagl.drawing/1.1.6",
+      "hashPath": "microsoft.msagl.drawing.1.1.6.nupkg.sha512"
+    },
+    "Microsoft.Msagl.GraphViewerGDI/1.1.7": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-av6SIZxaNILJ2r0ALvRBppOPYNCkGr2OQTx6XhwpB4rwrHtvKpcP5Olj9Qj4Yq6ijthKkmmkhHkDk6MHfpqbtA==",
+      "path": "microsoft.msagl.graphviewergdi/1.1.7",
+      "hashPath": "microsoft.msagl.graphviewergdi.1.1.7.nupkg.sha512"
+    },
+    "Msagl/1.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IlKyVvu9DCcc/xDAW2yw9N1i3xMzaogrL7oa4dE8/IFH3pt0loQo4O2TUKKeAvPgAKgNz45YSyD2/8qdTj8l6Q==",
+      "path": "msagl/1.2.1",
+      "hashPath": "msagl.1.2.1.nupkg.sha512"
+    },
+    "Msagl.Drawing/1.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sC5p15ONzHRY+p7CkJ9cZz511wheUjnjMz/gzMkfLR4Yhyiybx1zZL2ruc0aBvaTeqIbtorWjKEy2OD4ARTPXQ==",
+      "path": "msagl.drawing/1.2.1",
+      "hashPath": "msagl.drawing.1.2.1.nupkg.sha512"
+    },
+    "Msagl.WpfGraphControl/1.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kPHi5HNvn/DumtC8/ygAxWG6EsZICgLcgr4IMavN2cPx/3W6NLD8NMaHMWDVEOraOFhB8r82j6dBk11Q5liXUw==",
+      "path": "msagl.wpfgraphcontrol/1.2.1",
+      "hashPath": "msagl.wpfgraphcontrol.1.2.1.nupkg.sha512"
+    },
+    "System.Diagnostics.DiagnosticSource/10.0.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rQHsK7Xr8Uz3449860ayVXp/CaLmrhHlMPxbpT/ibOPtp/dTTsr6+f/SxaGO2NzxHf+0siLE0UfdVN5z1I0EgQ==",
+      "path": "system.diagnostics.diagnosticsource/10.0.8",
+      "hashPath": "system.diagnostics.diagnosticsource.10.0.8.nupkg.sha512"
+    },
+    "System.Reactive/6.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-M5cCC1ZMkZr9jbSQGTHnVkb5TDN67qWCV7AP8TAHdGkvDlu0puT5NzemESNn9+HkYIDpWpocP68/i+/ame2/2w==",
+      "path": "system.reactive/6.1.0",
+      "hashPath": "system.reactive.6.1.0.nupkg.sha512"
+    },
+    "Websocket.Client/5.4.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wLtckN0nSm4DBaMXaDexKa+fkA5K/plfLbMTGCbqcokuLufLCShIbj8dL+5I+MDFSZ+07L/7YDWif6cmaOAulQ==",
+      "path": "websocket.client/5.4.0",
+      "hashPath": "websocket.client.5.4.0.nupkg.sha512"
+    }
+  }
+}

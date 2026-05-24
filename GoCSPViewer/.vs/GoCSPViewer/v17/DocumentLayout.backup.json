@@ -1,0 +1,117 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\user\\source\\repos\\GoCSP\\GoCSPViewer\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CB7790FF-ACAC-4DD3-8CEA-AC3D9EFEF9F6}|GoCSPViewer\\GoCSPViewer.csproj|c:\\users\\user\\source\\repos\\gocsp\\gocspviewer\\gocspviewer\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB7790FF-ACAC-4DD3-8CEA-AC3D9EFEF9F6}|GoCSPViewer\\GoCSPViewer.csproj|solutionrelative:gocspviewer\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB7790FF-ACAC-4DD3-8CEA-AC3D9EFEF9F6}|GoCSPViewer\\GoCSPViewer.csproj|c:\\users\\user\\source\\repos\\gocsp\\gocspviewer\\gocspviewer\\models\\eventmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB7790FF-ACAC-4DD3-8CEA-AC3D9EFEF9F6}|GoCSPViewer\\GoCSPViewer.csproj|solutionrelative:gocspviewer\\models\\eventmessage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\user\\source\\repos\\GoCSP\\examples\\pipeline.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB7790FF-ACAC-4DD3-8CEA-AC3D9EFEF9F6}|GoCSPViewer\\GoCSPViewer.csproj|c:\\users\\user\\source\\repos\\gocsp\\gocspviewer\\gocspviewer\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{CB7790FF-ACAC-4DD3-8CEA-AC3D9EFEF9F6}|GoCSPViewer\\GoCSPViewer.csproj|solutionrelative:gocspviewer\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CB7790FF-ACAC-4DD3-8CEA-AC3D9EFEF9F6}|GoCSPViewer\\GoCSPViewer.csproj|c:\\users\\user\\source\\repos\\gocsp\\gocspviewer\\gocspviewer\\models\\diagram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CB7790FF-ACAC-4DD3-8CEA-AC3D9EFEF9F6}|GoCSPViewer\\GoCSPViewer.csproj|solutionrelative:gocspviewer\\models\\diagram.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 8,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{74946827-37a0-11d2-a273-00c04f8ef4ff}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "pipeline.json",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\GoCSP\\examples\\pipeline.json",
+              "RelativeDocumentMoniker": "..\\examples\\pipeline.json",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\GoCSP\\examples\\pipeline.json",
+              "RelativeToolTip": "..\\examples\\pipeline.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-05-21T13:16:55.393Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Diagram.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\GoCSP\\GoCSPViewer\\GoCSPViewer\\Models\\Diagram.cs",
+              "RelativeDocumentMoniker": "GoCSPViewer\\Models\\Diagram.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\GoCSP\\GoCSPViewer\\GoCSPViewer\\Models\\Diagram.cs",
+              "RelativeToolTip": "GoCSPViewer\\Models\\Diagram.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA4AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-19T00:37:14.941Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "EventMessage.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\GoCSP\\GoCSPViewer\\GoCSPViewer\\Models\\EventMessage.cs",
+              "RelativeDocumentMoniker": "GoCSPViewer\\Models\\EventMessage.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\GoCSP\\GoCSPViewer\\GoCSPViewer\\Models\\EventMessage.cs",
+              "RelativeToolTip": "GoCSPViewer\\Models\\EventMessage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-19T00:12:35.165Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\GoCSP\\GoCSPViewer\\GoCSPViewer\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "GoCSPViewer\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\GoCSP\\GoCSPViewer\\GoCSPViewer\\MainWindow.xaml",
+              "RelativeToolTip": "GoCSPViewer\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-05-18T23:58:45.585Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\user\\source\\repos\\GoCSP\\GoCSPViewer\\GoCSPViewer\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "GoCSPViewer\\MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\user\\source\\repos\\GoCSP\\GoCSPViewer\\GoCSPViewer\\MainWindow.xaml.cs",
+              "RelativeToolTip": "GoCSPViewer\\MainWindow.xaml.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAQwDUAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-18T23:58:43.446Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
