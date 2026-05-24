@@ -2,6 +2,7 @@ package runtime
 
 import (
 	"reflect"
+	"context"
 
 	"github.com/Knetic/govaluate"
 
@@ -10,6 +11,7 @@ import (
 )
 
 func runUniversalProcessor(
+	appCtx context.Context,
 	node model.Node,
 	ctx *ProcessContext,
 ) {
@@ -31,6 +33,12 @@ func runUniversalProcessor(
 	}
 
 	var cases []reflect.SelectCase
+
+	cases = append(cases, reflect.SelectCase{
+		Dir:  reflect.SelectRecv,
+		Chan: reflect.ValueOf(appCtx.Done()),
+	})
+
 	var ports []string
 
 	for _, port := range node.Inputs {
@@ -56,7 +64,11 @@ func runUniversalProcessor(
 
 		chosen, value, ok := reflect.Select(cases)
 
-		port := ports[chosen]
+		if chosen == 0 {
+			break
+		}
+
+		port := ports[chosen-1]
 
 		if !ok {
 
@@ -130,6 +142,7 @@ func runUniversalProcessor(
 				}
 			}
 
+			outer:
 			for port, outputs := range ctx.Outputs {
 
 				logger.Log(logger.Event{
@@ -140,7 +153,11 @@ func runUniversalProcessor(
 				})
 
 				for _, out := range outputs {
-					out <- result
+					select {
+					case out <- result:
+					case <-appCtx.Done():
+						break outer
+					}
 				}
 			}
 		}

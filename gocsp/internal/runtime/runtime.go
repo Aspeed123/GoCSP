@@ -5,13 +5,14 @@ import (
 	"sync"
 	"strings"
 	"reflect"
+	"context"
 
 
 	"gocsp/internal/logger"
 	"gocsp/internal/model"
 )
 
-func Run(diagram *model.Diagram) {
+func Run(appCtx context.Context, diagram *model.Diagram) {
 
 	contexts := make(map[string]*ProcessContext)
 
@@ -30,6 +31,17 @@ func Run(diagram *model.Diagram) {
 		toNode, toPort := splitPort(edge.To)
 		
 		ch := make(chan any, 64)
+
+		if edge.Initial != nil {
+			ch <- edge.Initial
+
+			logger.Log(logger.Event{
+                Event: "initial_token",
+                Node:  toNode,
+                Port:  toPort,
+                Value: edge.Initial,
+            })
+		}
 		
 		contexts[fromNode].Outputs[fromPort] =
 			append(
@@ -58,13 +70,13 @@ func Run(diagram *model.Diagram) {
 			switch n.Type {
 				
 				case "generator":
-					runGenerator(n, contexts[n.ID])
+					runGenerator(appCtx, n, contexts[n.ID])
 					
 				case "processor":
-					runProcessor(n, contexts[n.ID])
+					runProcessor(appCtx, n, contexts[n.ID])
 					
 				case "sink":
-					runSink(n, contexts[n.ID])
+					runSink(appCtx, n, contexts[n.ID])
 					
 			}
 
@@ -75,6 +87,7 @@ func Run(diagram *model.Diagram) {
 } 
 
 func runGenerator(
+	appCtx context.Context,
 	node model.Node,
 	ctx *ProcessContext,
 ) { 
@@ -86,10 +99,18 @@ func runGenerator(
 	} else {
 		valuesToSend = []any{1, 2, 3, 4, 5}
 	}
+
+outer:
 	
 	for port, outputs := range ctx.Outputs {
 		
 		for _, val := range valuesToSend {
+
+			select {
+			case <-appCtx.Done():
+				break outer
+			default:
+			}
 			
 			logger.Log(logger.Event{
 				Event: "send",
@@ -99,40 +120,56 @@ func runGenerator(
 			})
 			
 			for _, out := range outputs {
-				out <- val
+				select {
+				case out <- val:
+				case <-appCtx.Done():
+					break outer
+				}
 			}
 		}
-		
-		logger.Log(logger.Event{
-			Event: "port_closed",
-			Node: node.ID,
-			Port: port,
-		})
-		
-		for _, out := range outputs {
-			close(out)
-		}
 	}
+
+	<-appCtx.Done()
 	
 	logger.Log(logger.Event{
 		Event: "node_stop",
 		Node: node.ID,
 	})
+
+	for port, outputs := range ctx.Outputs {
+		logger.Log(logger.Event{
+			Event: "port_closed",
+			Node:  node.ID,
+			Port:  port,
+		})
+
+		for _, out := range outputs {
+			close(out)
+		}
+	}
 }
 
 func runProcessor(
+	appCtx context.Context,
 	node model.Node,
 	ctx *ProcessContext,
 ) { 
-	runUniversalProcessor(node, ctx) 
+	runUniversalProcessor(appCtx, node, ctx) 
 }
 
 func runSink(
+	appCtx context.Context,
 	node model.Node,
 	ctx *ProcessContext,
 ) {
 	
 	var cases []reflect.SelectCase
+
+	cases = append(cases, reflect.SelectCase{
+		Dir:  reflect.SelectRecv,
+		Chan: reflect.ValueOf(appCtx.Done()),
+	})
+
 	var ports []string
 	
 	for _, port := range node.Inputs {
@@ -152,8 +189,12 @@ func runSink(
 	for activeInputs > 0 {
 		
 		chosen, value, ok := reflect.Select(cases)
+
+		if chosen == 0 {
+			break
+		}
 		
-		port := ports[chosen]
+		port := ports[chosen-1]
 		
 		if !ok {
 			logger.Log(logger.Event{

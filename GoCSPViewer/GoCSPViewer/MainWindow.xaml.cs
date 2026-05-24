@@ -72,25 +72,13 @@ public partial class MainWindow : Window
         {
             var n = _graph.AddNode(node.Id);
             n.LabelText = node.Id;
-
-            Microsoft.Msagl.Drawing.Color baseColor;
-            // optional styling
-            switch (node.Type)
+            var baseColor = node.Type switch
             {
-                case "generator":
-                    baseColor = Microsoft.Msagl.Drawing.Color.LightSteelBlue;
-                    break;
-                case "processor":
-                    baseColor = Microsoft.Msagl.Drawing.Color.Gainsboro;
-                    break;
-                case "sink":
-                    baseColor = Microsoft.Msagl.Drawing.Color.PaleGreen;
-                    break;
-                default:
-                    baseColor = Microsoft.Msagl.Drawing.Color.Gray;
-                    break;
-            }
-
+                "generator" => Microsoft.Msagl.Drawing.Color.LightSteelBlue,
+                "processor" => Microsoft.Msagl.Drawing.Color.Gainsboro,
+                "sink" => Microsoft.Msagl.Drawing.Color.PaleGreen,
+                _ => Microsoft.Msagl.Drawing.Color.Gray,
+            };
             n.Attr.FillColor = baseColor;
 
             _nodeBaseColors[node.Id] = baseColor;
@@ -143,13 +131,14 @@ public partial class MainWindow : Window
     {
         _viewer = new GViewer
         {
-            Graph = _graph
+            Graph = _graph,
+            ToolBarIsVisible = false
         };
 
-        _viewer.ToolBarIsVisible = false;
-
-        var host = new WindowsFormsHost();
-        host.Child = _viewer;
+        var host = new WindowsFormsHost
+        {
+            Child = _viewer
+        };
 
         MainCanvas.Children.Clear();
         MainCanvas.Children.Add(host);
@@ -161,9 +150,10 @@ public partial class MainWindow : Window
             new Uri("ws://localhost:8080/ws");
 
         _client =
-            new WebsocketClient(url);
-
-        _client.IsReconnectionEnabled = false;
+            new WebsocketClient(url)
+            {
+                IsReconnectionEnabled = false
+            };
 
         _client.MessageReceived.Subscribe(msg =>
         {
@@ -211,60 +201,45 @@ public partial class MainWindow : Window
     private async Task HandleEventInternal(EventMessage evt)
     {
         var node = _graph?.FindNode(evt.Node);
-
         if (node == null || _viewer == null)
             return;
 
-        var color =
-            GetEventColor(evt.Event);
+        var color = GetEventColor(evt.Event);
+        var originalNodeColor = _nodeBaseColors[evt.Node];
 
-        var originalNodeColor =
-            _nodeBaseColors[evt.Node];
-
-        // NODE FLASH
-        if (evt.Event != "port_closed")
-        {
-            node.Attr.FillColor = color;
-        }
-
-        // EDGE FLASH
-        List<Edge> affectedEdges = new();
-
-        // SEND
-        if (evt.Event == "send")
-        {
-            if (_outgoingEdges.TryGetValue(
-                    evt.Node,
-                    out var outEdges))
-            {
-                affectedEdges.AddRange(outEdges);
-            }
-        }
-
-        // PORT CLOSED
+        // 1. ПОДЦВЕТКА УЗЛА
         if (evt.Event == "port_closed")
         {
             node.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
             node.Attr.LineWidth = 3;
-
-            var key =
-                $"{evt.Node}.{evt.Port}";
-
-            if (_portEdges.TryGetValue(
-                    key,
-                    out var portEdges))
-            {
-                affectedEdges.AddRange(portEdges);
-            }
+        }
+        else
+        {
+            node.Attr.FillColor = color;
         }
 
-        // APPLY EDGE STYLE
+        // 2. ПОИСК СВЯЗАННЫХ РЕБЕР
+        List<Edge> affectedEdges = new();
+        var portKey = $"{evt.Node}.{evt.Port}";
+
+        if (evt.Event == "send" && _outgoingEdges.TryGetValue(evt.Node, out var outEdges))
+        {
+            affectedEdges.AddRange(outEdges);
+        }
+        else if ((evt.Event == "port_closed" || evt.Event == "initial_token") &&
+                 _portEdges.TryGetValue(portKey, out var portEdges))
+        {
+            affectedEdges.AddRange(portEdges);
+        }
+
+        // 3. ПРИМЕНЕНИЕ СТИЛЯ К РЕБРАМ
+        bool isDataEvent = evt.Event == "send" || evt.Event == "initial_token";
         foreach (var edge in affectedEdges)
         {
             edge.Attr.Color = color;
             edge.Attr.LineWidth = 3;
 
-            if (evt.Event == "send")
+            if (isDataEvent)
             {
                 edge.LabelText = evt.Value?.ToString();
             }
@@ -272,29 +247,22 @@ public partial class MainWindow : Window
 
         _viewer.Invalidate();
 
+        // 4. ТАЙМИНГИ АНИМАЦИИ
         var totalDelay = (int)(1000 / _playbackSpeed);
         var flashDelay = (int)(totalDelay * 0.8);
         var restDelay = totalDelay - flashDelay;
 
         await Task.Delay(flashDelay);
 
-        // RESTORE NODE
-        node.Attr.FillColor =
-            originalNodeColor;
-
-        node.Attr.Color =
-            Microsoft.Msagl.Drawing.Color.Black;
-
+        // 5. ВОССТАНОВЛЕНИЕ ИСХОДНОГО СОСТОЯНИЯ
+        node.Attr.FillColor = originalNodeColor;
+        node.Attr.Color = Microsoft.Msagl.Drawing.Color.Black;
         node.Attr.LineWidth = 1;
 
-        // RESTORE EDGES
         foreach (var edge in affectedEdges)
         {
-            edge.Attr.Color =
-                Microsoft.Msagl.Drawing.Color.Black;
-
+            edge.Attr.Color = Microsoft.Msagl.Drawing.Color.Black;
             edge.Attr.LineWidth = 1;
-
             edge.LabelText = "";
         }
 
@@ -315,21 +283,18 @@ public partial class MainWindow : Window
                 Microsoft.Msagl.Drawing.Color.MediumPurple,
 
             // data flow
-            "send" =>
-                Microsoft.Msagl.Drawing.Color.DeepSkyBlue,
+            "initial_token" => Microsoft.Msagl.Drawing.Color.MediumSeaGreen,
 
-            "receive" =>
-                Microsoft.Msagl.Drawing.Color.Orange,
+            "send" => Microsoft.Msagl.Drawing.Color.DeepSkyBlue,
+
+            "receive" => Microsoft.Msagl.Drawing.Color.Orange,
 
             // shutdown / close
-            "port_closed" =>
-                Microsoft.Msagl.Drawing.Color.Red,
+            "port_closed" => Microsoft.Msagl.Drawing.Color.Red,
 
-            "node_stop" =>
-                Microsoft.Msagl.Drawing.Color.DarkRed,
+            "node_stop" => Microsoft.Msagl.Drawing.Color.DarkRed,
 
-            _ =>
-                Microsoft.Msagl.Drawing.Color.Yellow
+            _ => Microsoft.Msagl.Drawing.Color.Yellow
         };
     }
 
