@@ -3,6 +3,9 @@ package main
 import (
     "fmt"
     "os"
+    "os/signal"
+    "syscall"
+    "context"
 
     "gocsp/internal/parser"
     "gocsp/internal/runtime"
@@ -27,5 +30,8 @@ func main() {
     }
     defer logger.CloseLogFile()
 
-    runtime.Run(diagram)
+    ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer cancel()
+
+    runtime.Run(ctx, diagram)
 }

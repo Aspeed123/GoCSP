@@ -1,0 +1,38 @@
+{
+    "nodes": [
+        {
+            "id": "generator",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 1, 2, 3, 4, 5 ]
+        },
+        {
+            "id": "multiply",
+            "type": "processor",
+            "operation": "x * y",
+            "inputs": [ "x", "y" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "printer",
+            "type": "sink",
+            "inputs": [ "in" ]
+        }
+    ],
+
+    "edges": [
+        {
+            "from": "generator.out",
+            "to": "multiply.y"
+        },
+        {
+            "from": "multiply.out",
+            "to": "multiply.x",
+            "initial": 1
+        },
+        {
+            "from": "multiply.out",
+            "to": "printer.in"
+        }
+    ]
+}
