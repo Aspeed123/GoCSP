@@ -1,0 +1,53 @@
+{
+    "nodes": [
+        {
+            "id": "increment",
+            "type": "processor",
+            "operation": "x + 1",
+            "inputs": [ "x" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "check_less_5",
+            "type": "processor",
+            "operation": "y < 5",
+            "inputs": [ "y" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "switch",
+            "type": "switch",
+            "inputs": [ "in", "cond" ],
+            "outputs": [ "true", "false" ]
+        },
+        {
+            "id": "sink",
+            "type": "sink",
+            "inputs": [ "in" ]
+        }
+    ],
+
+    "edges": [
+        { 
+            "from": "switch.true", 
+            "to": "increment.x", 
+            "initial": 0 
+        },
+        { 
+            "from": "increment.out", 
+            "to": "check_less_5.y" 
+        },
+        { 
+            "from": "increment.out", 
+            "to": "switch.in" 
+        },
+        { 
+            "from": "check_less_5.out", 
+            "to": "switch.cond" 
+        },
+        { 
+            "from": "switch.false", 
+            "to": "sink.in" 
+        }
+    ]
+}

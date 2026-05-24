@@ -114,6 +114,7 @@ public partial class MainWindow : Window
             {
                 "generator" => Microsoft.Msagl.Drawing.Color.LightSteelBlue,
                 "processor" => Microsoft.Msagl.Drawing.Color.Gainsboro,
+                "switch" => Microsoft.Msagl.Drawing.Color.Orchid,
                 "sink" => Microsoft.Msagl.Drawing.Color.PaleGreen,
                 _ => Microsoft.Msagl.Drawing.Color.Gray,
             };

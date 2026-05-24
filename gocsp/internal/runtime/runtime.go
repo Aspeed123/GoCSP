@@ -77,6 +77,9 @@ func Run(appCtx context.Context, diagram *model.Diagram) {
 					
 				case "sink":
 					runSink(appCtx, n, contexts[n.ID])
+
+				case "switch":
+					runSwitch(appCtx, n, contexts[n.ID])
 					
 			}
 
