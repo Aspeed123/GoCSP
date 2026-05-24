@@ -98,7 +98,22 @@ func runGenerator(
 	var valuesToSend []any
 	
 	if len(node.Data) > 0 {
-		valuesToSend = node.Data
+		expanded, err :=
+			expandGeneratorData(node.Data)
+
+		if err != nil {
+
+			logger.Log(logger.Event{
+				Event: "error",
+				Node:  node.ID,
+				Value: err.Error(),
+			})
+
+			return
+		}
+
+		valuesToSend = expanded
+		
 	} else {
 		valuesToSend = []any{1, 2, 3, 4, 5}
 	}
