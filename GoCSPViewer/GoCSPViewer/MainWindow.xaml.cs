@@ -12,6 +12,7 @@ using Microsoft.Msagl.GraphViewerGdi;
 using Websocket.Client;
 
 using GoCSPViewer.Models;
+using Microsoft.Win32;
 
 namespace GoCSPViewer;
 
@@ -41,37 +42,74 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
-        LoadDiagram();
+        OpenDiagram();
     }
 
-    private void LoadDiagram()
+    private void OpenDiagram()
     {
-        var path = Path.GetFullPath(
+        var path = SelectDiagramFile();
+
+        if (path == null)
+        {
+            this.Close();
+            return;
+        }
+
+        LoadDiagramFromFile(path);
+
+        BuildGraph();
+
+        RenderGraph();
+    }
+
+    private string? SelectDiagramFile()
+    {
+        var defaultDir = Path.GetFullPath(
             Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory,
                 "..", "..", "..", "..", "..",
-                "examples",
-                "pipeline.json"
+                "examples"
             )
         );
 
+        OpenFileDialog openFileDialog = new()
+        {
+            Title = "Выберите файл диаграммы",
+            InitialDirectory = Directory.Exists(defaultDir) ? defaultDir : "c:\\",
+
+            Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+            FilterIndex = 1,
+            RestoreDirectory = true
+        };
+
+        return openFileDialog.ShowDialog() == true ? openFileDialog.FileName : null;
+    }
+
+    private void LoadDiagramFromFile(string path)
+    {
         var json = File.ReadAllText(path);
 
         _diagram = JsonSerializer.Deserialize<DiagramModel>(
             json,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+    }
 
+    private void BuildGraph()
+    {
         if (_diagram == null)
             return;
 
-        // MSAGL graph
         _graph = new Graph();
+        _portEdges.Clear();
+        _outgoingEdges.Clear();
+        _nodeBaseColors.Clear();
 
-        // nodes
+        // Наполнение узлов
         foreach (var node in _diagram.Nodes)
         {
             var n = _graph.AddNode(node.Id);
             n.LabelText = node.Id;
+
             var baseColor = node.Type switch
             {
                 "generator" => Microsoft.Msagl.Drawing.Color.LightSteelBlue,
@@ -80,11 +118,10 @@ public partial class MainWindow : Window
                 _ => Microsoft.Msagl.Drawing.Color.Gray,
             };
             n.Attr.FillColor = baseColor;
-
             _nodeBaseColors[node.Id] = baseColor;
         }
 
-        // edges
+        // Наполнение ребер
         foreach (var edge in _diagram.Edges)
         {
             var from = edge.From.Split('.')[0];
@@ -93,38 +130,22 @@ public partial class MainWindow : Window
             var edgeObj = _graph.AddEdge(from, to);
             edgeObj.LabelText = "";
 
-            var fromPort =
-                $"{from}.{edge.From.Split('.')[1]}";
+            string fromPort = edge.From;
+            string toPort = edge.To;
 
-            var toPort =
-                $"{to}.{edge.To.Split('.')[1]}";
+            if (!_portEdges.TryGetValue(fromPort, out var fromList))
+                _portEdges[fromPort] = fromList = new List<Edge>();
+            if (!_portEdges.TryGetValue(toPort, out var toList))
+                _portEdges[toPort] = toList = new List<Edge>();
+            if (!_outgoingEdges.TryGetValue(from, out var outList))
+                _outgoingEdges[from] = outList = new List<Edge>();
 
-            if (!_portEdges.ContainsKey(fromPort))
-            {
-                _portEdges[fromPort] =
-                    new List<Edge>();
-            }
-
-            if (!_portEdges.ContainsKey(toPort))
-            {
-                _portEdges[toPort] =
-                    new List<Edge>();
-            }
-
-            _portEdges[fromPort].Add(edgeObj);
-            _portEdges[toPort].Add(edgeObj);
-
-            if (!_outgoingEdges.ContainsKey(from))
-            {
-                _outgoingEdges[from] = new List<Edge>();
-            }
-
-            _outgoingEdges[from].Add(edgeObj);
+            fromList.Add(edgeObj);
+            toList.Add(edgeObj);
+            outList.Add(edgeObj);
         }
 
         _graph.Attr.LayerDirection = LayerDirection.LR;
-
-        RenderGraph();
     }
 
     private void RenderGraph()
