@@ -1,0 +1,132 @@
+# =========================================================
+# Go
+# =========================================================
+
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary
+*.test
+
+# Coverage
+*.out
+coverage.out
+coverage.html
+
+# Go workspace
+go.work
+go.work.sum
+
+# Vendor (раскомментируй если не хочешь коммитить vendor)
+# vendor/
+
+# Build directories
+bin/
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+
+# Logs
+*.log
+*.jsonl
+
+# Environment files
+.env
+.env.*
+
+# IDE configs (общие)
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# =========================================================
+# VS Code
+# =========================================================
+
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# =========================================================
+# Visual Studio / WPF (.NET)
+# =========================================================
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Bb]in/
+[Oo]bj/
+x64/
+x86/
+Debug/
+DebugPublic/
+Release/
+Releases/
+
+# Visual Studio cache
+.vs/
+
+# NuGet
+packages/
+!packages/build/
+*.nupkg
+*.snupkg
+
+# Rider / ReSharper
+_ReSharper*/
+*.DotSettings.user
+
+# Publish output
+publish/
+
+# Test results
+TestResults/
+
+# Generated files
+Generated\ Files/
+
+# =========================================================
+# WPF / .NET specific
+# =========================================================
+
+# Auto-generated XAML files
+*.g.cs
+*.g.i.cs
+
+# Profiling
+*.psess
+*.vsp
+*.vspx
+
+# Azure / local config
+appsettings.Development.json
+
+# =========================================================
+# OS
+# =========================================================
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Linux
+*~
