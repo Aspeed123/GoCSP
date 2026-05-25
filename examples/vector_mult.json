@@ -1,0 +1,209 @@
+{
+    "nodes": [
+        {
+            "id": "x0",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 1 ]
+        },
+        {
+            "id": "x1",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 2 ]
+        },
+        {
+            "id": "x2",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 8 ]
+        },
+        {
+            "id": "x3",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 13 ]
+        },
+        {
+            "id": "x4",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 7 ]
+        },
+        {
+            "id": "x5",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 4 ]
+        },
+        {
+            "id": "y0",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 3 ]
+        },
+        {
+            "id": "y1",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 21 ]
+        },
+        {
+            "id": "y2",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 6 ]
+        },
+        {
+            "id": "y3",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 11 ]
+        },
+        {
+            "id": "y4",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 9 ]
+        },
+        {
+            "id": "y5",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 5 ]
+        },
+        {
+            "id": "mult0",
+            "type": "processor",
+            "operation": "x0 * y0",
+            "inputs": [ "x0", "y0" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult1",
+            "type": "processor",
+            "operation": "x1 * y1",
+            "inputs": [ "x1", "y1" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult2",
+            "type": "processor",
+            "operation": "x2 * y2",
+            "inputs": [ "x2", "y2" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult3",
+            "type": "processor",
+            "operation": "x3 * y3",
+            "inputs": [ "x3", "y3" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult4",
+            "type": "processor",
+            "operation": "x4 * y4",
+            "inputs": [ "x4", "y4" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult5",
+            "type": "processor",
+            "operation": "x5 * y5",
+            "inputs": [ "x5", "y5" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "sum",
+            "type": "processor",
+            "operation": "m0 + m1 + m2 + m3 + m4 + m5",
+            "inputs": [ "m0", "m1", "m2", "m3", "m4", "m5" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "sink",
+            "type": "sink",
+            "inputs": [ "in" ]
+        }
+    ],
+
+    "edges": [
+        { 
+            "from": "x0.out", 
+            "to": "mult0.x0"
+        },
+        { 
+            "from": "x1.out", 
+            "to": "mult1.x1"
+        },
+        { 
+            "from": "x2.out", 
+            "to": "mult2.x2"
+        },
+        { 
+            "from": "x3.out", 
+            "to": "mult3.x3"
+        },
+        { 
+            "from": "x4.out", 
+            "to": "mult4.x4"
+        },
+        { 
+            "from": "x5.out", 
+            "to": "mult5.x5"
+        },
+        { 
+            "from": "y0.out", 
+            "to": "mult0.y0"
+        },
+        { 
+            "from": "y1.out", 
+            "to": "mult1.y1"
+        },
+        { 
+            "from": "y2.out", 
+            "to": "mult2.y2"
+        },
+        { 
+            "from": "y3.out", 
+            "to": "mult3.y3"
+        },
+        { 
+            "from": "y4.out", 
+            "to": "mult4.y4"
+        },
+        { 
+            "from": "y5.out", 
+            "to": "mult5.y5"
+        },
+        {
+            "from": "mult0.out",
+            "to": "sum.m0"
+        },
+        {
+            "from": "mult1.out",
+            "to": "sum.m1"
+        },
+        {
+            "from": "mult2.out",
+            "to": "sum.m2"
+        },
+        {
+            "from": "mult3.out",
+            "to": "sum.m3"
+        },
+        {
+            "from": "mult4.out",
+            "to": "sum.m4"
+        },
+        {
+            "from": "mult5.out",
+            "to": "sum.m5"
+        },
+        { 
+            "from": "sum.out", 
+            "to": "sink.in" 
+        }
+    ]
+}

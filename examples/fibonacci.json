@@ -1,0 +1,70 @@
+{
+    "nodes": [
+        {
+            "id": "adder",
+            "type": "processor",
+            "operation": "a + b",
+            "inputs": [ "a", "b" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "delay",
+            "type": "processor",
+            "operation": "x",
+            "inputs": [ "x" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "check_limit",
+            "type": "processor",
+            "operation": "val < 50",
+            "inputs": [ "val" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "switch",
+            "type": "switch",
+            "inputs": [ "in", "cond" ],
+            "outputs": [ "true", "false" ]
+        },
+        {
+            "id": "sink",
+            "type": "sink",
+            "inputs": [ "in" ]
+        }
+    ],
+
+    "edges": [
+        {
+            "from": "adder.out",
+            "to": "check_limit.val"
+        },
+        {
+            "from": "adder.out",
+            "to": "switch.in"
+        },
+        {
+            "from": "check_limit.out",
+            "to": "switch.cond"
+        },
+        {
+            "from": "switch.true",
+            "to": "adder.a",
+            "initial": 1
+        },
+        {
+            "from": "switch.true",
+            "to": "delay.x",
+            "initial": 0
+        },
+        {
+            "from": "delay.out",
+            "to": "adder.b",
+            "initial": 0
+        },
+        {
+            "from": "switch.false",
+            "to": "sink.in"
+        }
+    ]
+}

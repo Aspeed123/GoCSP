@@ -33,5 +33,6 @@ func main() {
     ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
 
+    logger.Run()
     runtime.Run(ctx, diagram)
 }

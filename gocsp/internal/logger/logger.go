@@ -15,6 +15,8 @@ var logFile *os.File
 
 var logMutex sync.Mutex
 
+var logChannel = make(chan Event, 10000)
+
 type Event struct {
     ID    int64  `json:"id"`
     Time  time.Time `json:"time"`
@@ -29,19 +31,22 @@ func Log(event Event) {
 
     event.ID = atomic.AddInt64(&eventCounter, 1)
 
-    data, _ := json.Marshal(event)
-
-    logMutex.Lock()
-    defer logMutex.Unlock()
-
-    fmt.Println(string(data))
-
-    if logFile != nil {
-
-    logFile.Write(data)
-
-    logFile.Write([]byte("\n"))
+    logChannel <- event
 }
+
+func Run() {
+    go func() {
+        for event := range logChannel {
+            data, _ := json.Marshal(event)
+
+            fmt.Println(string(data))
+
+            if logFile != nil {
+                logFile.Write(data)
+                logFile.Write([]byte("\n"))
+            }
+        }
+    }()
 }
 
 func InitLogFile(path string) error {
