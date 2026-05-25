@@ -35,4 +35,5 @@ func main() {
 
     logger.Run()
     runtime.Run(ctx, diagram)
+    logger.Shutdown()
 }

@@ -244,9 +244,16 @@ public partial class MainWindow : Window
         List<Edge> affectedEdges = new();
         var portKey = $"{evt.Node}.{evt.Port}";
 
-        if (evt.Event == "send" && _outgoingEdges.TryGetValue(evt.Node, out var outEdges))
+        if (evt.Event == "send")
         {
-            affectedEdges.AddRange(outEdges);
+            if (!string.IsNullOrEmpty(evt.Port) && _portEdges.TryGetValue(portKey, out var portEdges))
+            {
+                affectedEdges.AddRange(portEdges);
+            }
+            else if (_outgoingEdges.TryGetValue(evt.Node, out var outEdges))
+            {
+                affectedEdges.AddRange(outEdges);
+            }
         }
         else if ((evt.Event == "port_closed" || evt.Event == "initial_token") &&
                  _portEdges.TryGetValue(portKey, out var portEdges))

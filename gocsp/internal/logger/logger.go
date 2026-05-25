@@ -2,7 +2,6 @@ package logger
 
 import (
     "encoding/json"
-    "fmt"
     "time"
     "sync/atomic"
     "os"
@@ -13,7 +12,7 @@ var eventCounter int64
 
 var logFile *os.File
 
-var logMutex sync.Mutex
+var wg sync.WaitGroup
 
 var logChannel = make(chan Event, 10000)
 
@@ -35,11 +34,13 @@ func Log(event Event) {
 }
 
 func Run() {
+    wg.Add(1)
+
     go func() {
+        defer wg.Done()
+
         for event := range logChannel {
             data, _ := json.Marshal(event)
-
-            fmt.Println(string(data))
 
             if logFile != nil {
                 logFile.Write(data)
@@ -47,6 +48,12 @@ func Run() {
             }
         }
     }()
+}
+
+func Shutdown() {
+	close(logChannel)
+
+	wg.Wait()
 }
 
 func InitLogFile(path string) error {
