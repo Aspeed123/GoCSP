@@ -8,6 +8,7 @@ using Microsoft.Msagl.Drawing;
 using Microsoft.Msagl.Layout.Layered;
 using Microsoft.Msagl.WpfGraphControl;
 using Microsoft.Msagl.GraphViewerGdi;
+using System.Diagnostics;
 
 using Websocket.Client;
 
@@ -38,6 +39,10 @@ public partial class MainWindow : Window
 
     private double _playbackSpeed = 1.0;
 
+    private Process? _gocspProcess;
+
+    private Process? _serverProcess;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -55,11 +60,82 @@ public partial class MainWindow : Window
             return;
         }
 
+        ExecuteGoBackend(path);
+
         LoadDiagramFromFile(path);
 
         BuildGraph();
 
         RenderGraph();
+    }
+
+    private void ExecuteGoBackend(string diagramPath)
+    {
+        try
+        {
+            string projectRoot = Path.GetFullPath(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "..", "gocsp")
+            );
+            string relativeJsonPath = Path.GetRelativePath(projectRoot, diagramPath);
+
+            // 1. Запуск gocsp (работает в фоне)
+            ProcessStartInfo gocspInfo = new()
+            {
+                FileName = "go",
+                Arguments = $"run ./cmd/gocsp \"{relativeJsonPath}\"",
+                WorkingDirectory = projectRoot,
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                RedirectStandardInput = true
+            };
+
+            _gocspProcess = Process.Start(gocspInfo);
+
+            // Убираем gocspProcess.WaitForExit(); !!!
+
+            // 2. Запуск replay_server (работает в фоне)
+            ProcessStartInfo serverInfo = new()
+            {
+                FileName = "go",
+                Arguments = "run ./cmd/replay_server",
+                WorkingDirectory = projectRoot,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+
+            _serverProcess = Process.Start(serverInfo);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка при запуске Go-сервера: {ex.Message}", "Ошибка инициализации", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    protected override void OnClosed(EventArgs e)
+    {
+        base.OnClosed(e);
+
+        // Безопасно завершаем процесс gocsp
+        if (_gocspProcess != null && !_gocspProcess.HasExited)
+        {
+            try
+            {
+                _gocspProcess.Kill(entireProcessTree: true);
+                _gocspProcess.Dispose();
+            }
+            catch { /* Игнорируем ошибки при закрытии */ }
+        }
+
+        // Безопасно завершаем процесс сервера
+        if (_serverProcess != null && !_serverProcess.HasExited)
+        {
+            try
+            {
+                _serverProcess.Kill(entireProcessTree: true);
+                _serverProcess.Dispose();
+            }
+            catch { /* Игнорируем ошибки при закрытии */ }
+        }
     }
 
     private string? SelectDiagramFile()
@@ -344,6 +420,11 @@ public partial class MainWindow : Window
         object sender,
         RoutedEventArgs e)
     {
+        if (_gocspProcess != null && !_gocspProcess.HasExited)
+        {
+            _gocspProcess.StandardInput.WriteLine("stop");
+        }
+
         ConnectWebSocket();
     }
 

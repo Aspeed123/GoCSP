@@ -6,6 +6,7 @@ import (
     "os/signal"
     "syscall"
     "context"
+    "bufio"
 
     "gocsp/internal/parser"
     "gocsp/internal/runtime"
@@ -32,6 +33,15 @@ func main() {
 
     ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer cancel()
+
+    go func() {
+		reader := bufio.NewReader(os.Stdin)
+
+		_, err := reader.ReadString('\n') 
+		if err == nil {
+			cancel()
+		}
+	}()
 
     logger.Run()
     runtime.Run(ctx, diagram)
