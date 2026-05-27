@@ -60,6 +60,34 @@ func runUniversalProcessor(
 
 	activeInputs := len(ports)
 
+	defer func() {
+        logger.Log(logger.Event{
+            Event: "node_stop",
+            Node:  node.ID,
+        })
+
+        for _, port := range ports {
+            if !closedPorts[port] {
+                logger.Log(logger.Event{
+                    Event: "port_closed",
+                    Node:  node.ID,
+                    Port:  port,
+                })
+            }
+        }
+
+        for port, outputs := range ctx.Outputs {
+            logger.Log(logger.Event{
+                Event: "port_closed",
+                Node:  node.ID,
+                Port:  port,
+            })
+            for _, out := range outputs {
+                close(out)
+            }
+        }
+    }()
+
 	for activeInputs > 0 {
 
 		chosen, value, ok := reflect.Select(cases)
@@ -77,12 +105,6 @@ func runUniversalProcessor(
 			cases[chosen].Chan = reflect.Value{}
 
 			activeInputs--
-
-			logger.Log(logger.Event{
-				Event: "port_closed",
-				Node: node.ID,
-				Port: port,
-			})
 			
 			continue
 		}
@@ -160,22 +182,6 @@ func runUniversalProcessor(
 					}
 				}
 			}
-		}
-	}
-
-	logger.Log(logger.Event{
-		Event: "node_stop",
-		Node: node.ID,
-	})
-
-	for port, outputs := range ctx.Outputs {
-		logger.Log(logger.Event{
-			Event: "port_closed",
-			Node: node.ID,
-			Port: port,
-		})
-		for _, out := range outputs {
-			close(out)
 		}
 	}
 }

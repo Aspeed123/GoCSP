@@ -14,6 +14,14 @@ func runSwitch(appCtx context.Context, node model.Node, procCtx *ProcessContext)
 			Node:  node.ID,
 		})
 
+		for port := range procCtx.Inputs {
+            logger.Log(logger.Event{
+                Event: "port_closed",
+                Node:  node.ID,
+                Port:  port,
+            })
+        }
+
         for port, outputs := range procCtx.Outputs {
             logger.Log(logger.Event{
                 Event: "port_closed",

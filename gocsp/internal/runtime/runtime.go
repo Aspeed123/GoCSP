@@ -201,8 +201,38 @@ func runSink(
 		
 		ports = append(ports, port)
 	}
+
+	closedPorts := make(map[string]bool)
 	
 	activeInputs := len(ports)
+
+	defer func() {
+        logger.Log(logger.Event{
+            Event: "node_stop",
+            Node:  node.ID,
+        })
+
+        for _, port := range ports {
+            if !closedPorts[port] {
+                logger.Log(logger.Event{
+                    Event: "port_closed",
+                    Node:  node.ID,
+                    Port:  port,
+                })
+            }
+        }
+
+        for port, outputs := range ctx.Outputs {
+            logger.Log(logger.Event{
+                Event: "port_closed",
+                Node:  node.ID,
+                Port:  port,
+            })
+            for _, out := range outputs {
+                close(out)
+            }
+        }
+    }()
 	
 	for activeInputs > 0 {
 		
@@ -215,12 +245,8 @@ func runSink(
 		port := ports[chosen-1]
 		
 		if !ok {
-			logger.Log(logger.Event{
-				Event: "port_closed",
-				Node: node.ID,
-				Port: port,
-			})
-			
+			closedPorts[port] = true
+
 			cases[chosen].Chan = reflect.Value{}
 			
 			activeInputs--
@@ -240,11 +266,6 @@ func runSink(
 			value.Interface(),
 		)
 	}
-	
-	logger.Log(logger.Event{
-		Event: "node_stop",
-		Node: node.ID,
-	})
 } 
 
 func splitPort(path string) (string, string) {

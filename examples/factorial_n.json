@@ -1,0 +1,78 @@
+{
+    "nodes": [
+        {
+            "id": "generator",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 5 ]
+        },
+        {
+            "id": "decrement",
+            "type": "processor",
+            "operation": "n - 1",
+            "inputs": [ "n" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "check_greater_0",
+            "type": "processor",
+            "operation": "y > 0",
+            "inputs": [ "y" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "switch",
+            "type": "switch",
+            "inputs": [ "in", "cond" ],
+            "outputs": [ "true", "false" ]
+        },
+        {
+            "id": "multiply",
+            "type": "processor",
+            "operation": "x * y",
+            "inputs": [ "x", "y" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "printer",
+            "type": "sink",
+            "inputs": [ "in" ]
+        }
+    ],
+
+    "edges": [
+        {
+            "from": "generator.out",
+            "to": "multiply.y"
+        },
+        {
+            "from": "multiply.out",
+            "to": "multiply.x",
+            "initial": 1
+        },
+        {
+            "from": "multiply.out",
+            "to": "check_greater_0.y"
+        },
+        {
+            "from": "multiply.out",
+            "to": "switch.in"
+        },
+        {
+            "from": "check_greater_0.out",
+            "to": "switch.cond"
+        },
+        { 
+            "from": "switch.true", 
+            "to": "decrement.n" 
+        },
+        { 
+            "from": "switch.false", 
+            "to": "printer.in" 
+        },
+        { 
+            "from": "decrement.out", 
+            "to": "multiply.y" 
+        }
+    ]
+}

@@ -37,6 +37,8 @@ public partial class MainWindow : Window
 
     private bool _sequentialMode = false;
 
+    private DateTimeOffset? _lastEventTimestamp = null;
+
     private double _playbackSpeed = 1.0;
 
     private Process? _gocspProcess;
@@ -353,9 +355,44 @@ public partial class MainWindow : Window
         _viewer.Invalidate();
 
         // 4. ТАЙМИНГИ АНИМАЦИИ
-        var totalDelay = (int)(1000 / _playbackSpeed);
-        var flashDelay = (int)(totalDelay * 0.8);
-        var restDelay = totalDelay - flashDelay;
+        int baseFlashMs = 200;
+
+        int flashDelay = (int)(baseFlashMs / _playbackSpeed);
+
+        if (flashDelay < 30) flashDelay = 30;
+
+        int totalWaitTime = flashDelay;
+
+        if (evt.Event == "port_closed" || evt.Event == "node_stop")
+        {
+            totalWaitTime = flashDelay * 2;
+            _lastEventTimestamp = evt.Time;
+        }
+        else
+        {
+            if (_lastEventTimestamp.HasValue)
+            {
+                TimeSpan timeDifference = evt.Time - _lastEventTimestamp.Value;
+                int realDeltaMs = (int)(timeDifference.TotalMilliseconds / _playbackSpeed);
+
+                int maxPauseMs = (int)(1500 / _playbackSpeed);
+                if (realDeltaMs > maxPauseMs) realDeltaMs = maxPauseMs;
+
+                totalWaitTime = realDeltaMs;
+            }
+
+            _lastEventTimestamp = evt.Time;
+        }
+
+        int restDelay = totalWaitTime - flashDelay;
+
+        int minRestMs = (int)(50 / _playbackSpeed);
+        if (minRestMs < 16) minRestMs = 16;
+
+        if (restDelay < minRestMs)
+        {
+            restDelay = minRestMs;
+        }
 
         await Task.Delay(flashDelay);
 
@@ -384,8 +421,7 @@ public partial class MainWindow : Window
         return evt switch
         {
             // goroutine lifecycle
-            "goroutine_start" =>
-                Microsoft.Msagl.Drawing.Color.MediumPurple,
+            "goroutine_start" => Microsoft.Msagl.Drawing.Color.MediumPurple,
 
             // data flow
             "initial_token" => Microsoft.Msagl.Drawing.Color.MediumSeaGreen,
