@@ -1,70 +1,113 @@
 package runtime
 
 import (
-    "reflect"
+	"context"
+	"reflect"
 
-    "gocsp/internal/logger"
-    "gocsp/internal/model"
+	"gocsp/internal/logger"
+	"gocsp/internal/model"
 )
 
 func runMerge(
-    node model.Node,
-    ctx *ProcessContext,
+	appCtx context.Context,
+	node model.Node,
+	ctx *ProcessContext,
 ) {
 
-    outputs := ctx.Outputs["out"]
+	var cases []reflect.SelectCase
 
-    var cases []reflect.SelectCase
+	cases = append(cases, reflect.SelectCase{
+		Dir:  reflect.SelectRecv,
+		Chan: reflect.ValueOf(appCtx.Done()),
+	})
 
-    var portNames []string
+	var ports []string
 
-    for portName, ch := range ctx.Inputs {
+	for _, port := range node.Inputs {
 
-        cases = append(cases, reflect.SelectCase{
-            Dir:  reflect.SelectRecv,
-            Chan: reflect.ValueOf(ch),
-        })
+		ch := ctx.Inputs[port]
 
-        portNames = append(portNames, portName)
-    }
+		cases = append(cases,
+			reflect.SelectCase{
+				Dir:  reflect.SelectRecv,
+				Chan: reflect.ValueOf(ch),
+			},
+		)
 
-    activeInputs := len(cases)
+		ports = append(ports, port)
+	}
 
-    for activeInputs > 0 {
+	activeInputs := len(ports)
 
-        chosen, value, ok := reflect.Select(cases)
+    defer func() {
+		logger.Log(logger.Event{
+			Event: "node_stop",
+			Node:  node.ID,
+		})
 
-        if !ok {
-
-            cases[chosen].Chan = reflect.Value{}
-
-            activeInputs--
-
-            continue
+        for _, port := range ports {
+            logger.Log(logger.Event{
+                Event: "port_closed",
+                Node:  node.ID,
+                Port:  port,
+            })
         }
 
-        port := portNames[chosen]
+		for port, outputs := range ctx.Outputs {
+			logger.Log(logger.Event{
+				Event: "port_closed",
+				Node:  node.ID,
+				Port:  port,
+			})
+			for _, out := range outputs {
+				close(out)
+			}
+		}
+	}()
 
-        logger.Log(logger.Event{
-            Event: "receive",
-            Node:  node.ID,
-            Port:  port,
-            Value: value.Interface(),
-        })
+	for activeInputs > 0 {
 
-        logger.Log(logger.Event{
-            Event: "send",
-            Node:  node.ID,
-            Port:  "out",
-            Value: value.Interface(),
-        })
+		chosen, value, ok := reflect.Select(cases)
 
-        for _, out := range outputs {
-            out <- value.Interface()
-        }
-    }
+		if chosen == 0 {
+			break
+		}
 
-    for _, out := range outputs {
-        close(out)
-    }
+		port := ports[chosen-1]
+
+		if !ok {
+			cases[chosen].Chan = reflect.Value{}
+			activeInputs--
+
+			continue
+		}
+
+		receivedValue := value.Interface()
+
+		logger.Log(logger.Event{
+			Event: "receive",
+			Node:  node.ID,
+			Port:  port,
+			Value: receivedValue,
+		})
+
+	outer:
+		for outPort, outputs := range ctx.Outputs {
+
+			logger.Log(logger.Event{
+				Event: "send",
+				Node:  node.ID,
+				Port:  outPort,
+				Value: receivedValue,
+			})
+
+			for _, out := range outputs {
+				select {
+				case out <- receivedValue:
+				case <-appCtx.Done():
+					break outer
+				}
+			}
+		}
+	}
 }

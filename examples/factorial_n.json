@@ -1,78 +1,72 @@
 {
-    "nodes": [
-        {
-            "id": "generator",
-            "type": "generator",
-            "outputs": [ "out" ],
-            "data": [ 5 ]
-        },
-        {
-            "id": "decrement",
-            "type": "processor",
-            "operation": "n - 1",
-            "inputs": [ "n" ],
-            "outputs": [ "out" ]
-        },
-        {
-            "id": "check_greater_0",
-            "type": "processor",
-            "operation": "y > 0",
-            "inputs": [ "y" ],
-            "outputs": [ "out" ]
-        },
-        {
-            "id": "switch",
-            "type": "switch",
-            "inputs": [ "in", "cond" ],
-            "outputs": [ "true", "false" ]
-        },
-        {
-            "id": "multiply",
-            "type": "processor",
-            "operation": "x * y",
-            "inputs": [ "x", "y" ],
-            "outputs": [ "out" ]
-        },
-        {
-            "id": "printer",
-            "type": "sink",
-            "inputs": [ "in" ]
-        }
-    ],
+  "nodes": [
+    {
+      "id": "gen_n",
+      "type": "generator",
+      "data": [5],
+      "outputs": [ "out" ]
+    },
+    {
+      "id": "merge",
+      "type": "merge",
+      "inputs": [ "init", "loop" ],
+      "outputs": [ "out" ]
+    },
+    {
+      "id": "cond",
+      "type": "processor",
+      "operation": "n > 1",
+      "inputs": [ "n" ],
+      "outputs": [ "out" ]
+    },
+    {
+      "id": "sw_n",
+      "type": "switch",
+      "inputs": [ "in", "cond" ],
+      "outputs": [ "true", "false" ]
+    },
+    {
+      "id": "sw_dec",
+      "type": "switch",
+      "inputs": [ "in", "cond" ],
+      "outputs": [ "true" ]
+    },
+    {
+      "id": "mul",
+      "type": "processor",
+      "operation": "n * dec",
+      "inputs": [ "n", "dec" ],
+      "outputs": [ "out" ]
+    },
+    {
+      "id": "dec",
+      "type": "processor",
+      "operation": "n - 1",
+      "inputs": [ "n" ],
+      "outputs": [ "out" ]
+    },
+    {
+      "id": "printer",
+      "type": "sink",
+      "inputs": [ "in" ]
+    }
+  ],
+  "edges": [
+    { "from": "gen_n.out", "to": "merge.init" },
 
-    "edges": [
-        {
-            "from": "generator.out",
-            "to": "multiply.y"
-        },
-        {
-            "from": "multiply.out",
-            "to": "multiply.x",
-            "initial": 1
-        },
-        {
-            "from": "multiply.out",
-            "to": "check_greater_0.y"
-        },
-        {
-            "from": "multiply.out",
-            "to": "switch.in"
-        },
-        {
-            "from": "check_greater_0.out",
-            "to": "switch.cond"
-        },
-        { 
-            "from": "switch.true", 
-            "to": "decrement.n" 
-        },
-        { 
-            "from": "switch.false", 
-            "to": "printer.in" 
-        },
-        { 
-            "from": "decrement.out", 
-            "to": "multiply.y" 
-        }
-    ]
+    { "from": "mul.out", "to": "sw_n.in", "initial": 1 },
+    
+    { "from": "merge.out", "to": "cond.n" },
+    { "from": "merge.out", "to": "sw_dec.in" },
+    
+    { "from": "cond.out", "to": "sw_n.cond" },
+    { "from": "cond.out", "to": "sw_dec.cond" },
+    
+    { "from": "sw_n.true", "to": "mul.n" },
+    { "from": "sw_n.false", "to": "printer.in" },
+    { "from": "sw_dec.true", "to": "dec.n" },
+    { "from": "sw_dec.true", "to": "mul.dec" },
+    
+    { "from": "dec.out", "to": "merge.loop" }
+  ]
 }

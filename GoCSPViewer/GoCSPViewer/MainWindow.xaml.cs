@@ -194,6 +194,7 @@ public partial class MainWindow : Window
                 "processor" => Microsoft.Msagl.Drawing.Color.Gainsboro,
                 "switch" => Microsoft.Msagl.Drawing.Color.Orchid,
                 "sink" => Microsoft.Msagl.Drawing.Color.PaleGreen,
+                "merge" => Microsoft.Msagl.Drawing.Color.Moccasin,
                 _ => Microsoft.Msagl.Drawing.Color.Gray,
             };
             n.Attr.FillColor = baseColor;
@@ -429,6 +430,8 @@ public partial class MainWindow : Window
             "send" => Microsoft.Msagl.Drawing.Color.DeepSkyBlue,
 
             "receive" => Microsoft.Msagl.Drawing.Color.Orange,
+
+            "dropped" => Microsoft.Msagl.Drawing.Color.DimGray,
 
             // shutdown / close
             "port_closed" => Microsoft.Msagl.Drawing.Color.Red,

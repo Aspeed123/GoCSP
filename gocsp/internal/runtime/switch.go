@@ -80,6 +80,16 @@ func runSwitch(appCtx context.Context, node model.Node, procCtx *ProcessContext)
 					port = "true"
 				}
 
+				if len(targetOutputs) == 0 {
+					logger.Log(logger.Event{
+						Event: "dropped",
+						Node:  node.ID,
+						Port:  port,
+						Value: data,
+					})
+					continue
+				}
+
 				for _, ch := range targetOutputs {
 					select {
 					case ch <- data:

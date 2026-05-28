@@ -80,6 +80,9 @@ func Run(appCtx context.Context, diagram *model.Diagram) {
 
 				case "switch":
 					runSwitch(appCtx, n, contexts[n.ID])
+
+				case "merge":
+					runMerge(appCtx, n, contexts[n.ID])
 					
 			}
 
