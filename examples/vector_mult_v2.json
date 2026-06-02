@@ -1,0 +1,148 @@
+{
+    "nodes": [
+        {
+            "id": "x0",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 1, 2, 3, 4, 5 ]
+        },
+        {
+            "id": "x1",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 2, 4, 6, 8, 10 ]
+        },
+        {
+            "id": "x2",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 8, 16, 24, 32, 40 ]
+        },
+        {
+            "id": "x3",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 13, 7, 5, 3, 17 ]
+        },
+        {
+            "id": "x4",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 7, 14, 13, 26, 25 ]
+        },
+        {
+            "id": "x5",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 4, 3, 2, 1, 5 ]
+        },
+        {
+            "id": "mult0",
+            "type": "generator",
+            "outputs": [ "out" ],
+            "data": [ 0, 0, 0, 0, 0 ]
+        },
+        {
+            "id": "mult1",
+            "type": "processor",
+            "operation": "3 * x0 + y0",
+            "inputs": [ "x0", "y0" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult2",
+            "type": "processor",
+            "operation": "21 * x1 + y1",
+            "inputs": [ "x1", "y1" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult3",
+            "type": "processor",
+            "operation": "6 * x2 + y2",
+            "inputs": [ "x2", "y2" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult4",
+            "type": "processor",
+            "operation": "11 * x3 + y3",
+            "inputs": [ "x3", "y3" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult5",
+            "type": "processor",
+            "operation": "9 * x4 + y4",
+            "inputs": [ "x4", "y4" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "mult6",
+            "type": "processor",
+            "operation": "5 * x5 + y5",
+            "inputs": [ "x5", "y5" ],
+            "outputs": [ "out" ]
+        },
+        {
+            "id": "sink",
+            "type": "sink",
+            "inputs": [ "in" ]
+        }
+    ],
+
+    "edges": [
+        { 
+            "from": "mult0.out", 
+            "to": "mult1.y0"
+        },
+        { 
+            "from": "x0.out", 
+            "to": "mult1.x0"
+        },
+        { 
+            "from": "x1.out", 
+            "to": "mult2.x1"
+        },
+        { 
+            "from": "x2.out", 
+            "to": "mult3.x2"
+        },
+        { 
+            "from": "x3.out", 
+            "to": "mult4.x3"
+        },
+        { 
+            "from": "x4.out", 
+            "to": "mult5.x4"
+        },
+        { 
+            "from": "x5.out", 
+            "to": "mult6.x5"
+        },
+        { 
+            "from": "mult1.out", 
+            "to": "mult2.y1"
+        },
+        { 
+            "from": "mult2.out", 
+            "to": "mult3.y2"
+        },
+        { 
+            "from": "mult3.out", 
+            "to": "mult4.y3"
+        },
+        { 
+            "from": "mult4.out", 
+            "to": "mult5.y4"
+        },
+        { 
+            "from": "mult5.out", 
+            "to": "mult6.y5"
+        },
+        { 
+            "from": "mult6.out", 
+            "to": "sink.in" 
+        }
+    ]
+}

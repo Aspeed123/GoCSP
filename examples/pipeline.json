@@ -19,7 +19,7 @@
     },
 
     {
-      "id": "sum",
+      "id": "sum1",
       "type": "processor",
       "operation": "a + b",
       "inputs": [ "a", "b" ],
@@ -51,7 +51,7 @@
     },
 
     {
-      "id": "merge",
+      "id": "sum2",
       "type": "processor",
       "operation": "a + b",
       "inputs": [ "a", "b" ],
@@ -74,19 +74,19 @@
   "edges": [
     {
       "from": "generator1.out",
-      "to": "sum.a"
+      "to": "sum1.a"
     },
     {
       "from": "generator2.out",
-      "to": "sum.b"
+      "to": "sum1.b"
     },
 
     {
-      "from": "sum.out",
+      "from": "sum1.out",
       "to": "double.n"
     },
     {
-      "from": "sum.out",
+      "from": "sum1.out",
       "to": "square.n"
     },
 
@@ -101,19 +101,19 @@
 
     {
       "from": "multiply.out",
-      "to": "merge.a"
+      "to": "sum2.a"
     },
     {
       "from": "square.out",
-      "to": "merge.b"
+      "to": "sum2.b"
     },
 
     {
-      "from": "merge.out",
+      "from": "sum2.out",
       "to": "printer1.in"
     },
     {
-      "from": "merge.out",
+      "from": "sum2.out",
       "to": "printer2.in"
     }
   ]
