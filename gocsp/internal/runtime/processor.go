@@ -10,11 +10,7 @@ import (
 	"gocsp/internal/model"
 )
 
-func runUniversalProcessor(
-	appCtx context.Context,
-	node model.Node,
-	ctx *ProcessContext,
-) {
+func runProcessor(appCtx context.Context, node model.Node, procCtx *ProcessContext) {
 
 	expression, err :=
 		govaluate.NewEvaluableExpression(
@@ -43,7 +39,7 @@ func runUniversalProcessor(
 
 	for _, port := range node.Inputs {
 
-		ch := ctx.Inputs[port]
+		ch := procCtx.Inputs[port]
 
 		cases = append(cases,
 			reflect.SelectCase{
@@ -76,7 +72,7 @@ func runUniversalProcessor(
             }
         }
 
-        for port, outputs := range ctx.Outputs {
+        for port, outputs := range procCtx.Outputs {
             logger.Log(logger.Event{
                 Event: "port_closed",
                 Node:  node.ID,
@@ -165,7 +161,7 @@ func runUniversalProcessor(
 			}
 
 			outer:
-			for port, outputs := range ctx.Outputs {
+			for port, outputs := range procCtx.Outputs {
 
 				logger.Log(logger.Event{
 					Event: "send",

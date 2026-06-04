@@ -80,7 +80,6 @@ public partial class MainWindow : Window
             );
             string relativeJsonPath = Path.GetRelativePath(projectRoot, diagramPath);
 
-            // 1. Запуск gocsp (работает в фоне)
             ProcessStartInfo gocspInfo = new()
             {
                 FileName = "go",
@@ -93,9 +92,7 @@ public partial class MainWindow : Window
 
             _gocspProcess = Process.Start(gocspInfo);
 
-            // Убираем gocspProcess.WaitForExit(); !!!
 
-            // 2. Запуск replay_server (работает в фоне)
             ProcessStartInfo serverInfo = new()
             {
                 FileName = "go",
@@ -117,7 +114,6 @@ public partial class MainWindow : Window
     {
         base.OnClosed(e);
 
-        // Безопасно завершаем процесс gocsp
         if (_gocspProcess != null && !_gocspProcess.HasExited)
         {
             try
@@ -125,10 +121,9 @@ public partial class MainWindow : Window
                 _gocspProcess.Kill(entireProcessTree: true);
                 _gocspProcess.Dispose();
             }
-            catch { /* Игнорируем ошибки при закрытии */ }
+            catch { }
         }
 
-        // Безопасно завершаем процесс сервера
         if (_serverProcess != null && !_serverProcess.HasExited)
         {
             try
@@ -136,7 +131,7 @@ public partial class MainWindow : Window
                 _serverProcess.Kill(entireProcessTree: true);
                 _serverProcess.Dispose();
             }
-            catch { /* Игнорируем ошибки при закрытии */ }
+            catch { }
         }
     }
 
@@ -308,7 +303,6 @@ public partial class MainWindow : Window
         var color = GetEventColor(evt.Event);
         var originalNodeColor = _nodeBaseColors[evt.Node];
 
-        // 1. ПОДЦВЕТКА УЗЛА
         if (evt.Event == "port_closed")
         {
             node.Attr.Color = Microsoft.Msagl.Drawing.Color.Red;
@@ -319,7 +313,6 @@ public partial class MainWindow : Window
             node.Attr.FillColor = color;
         }
 
-        // 2. ПОИСК СВЯЗАННЫХ РЕБЕР
         List<Edge> affectedEdges = new();
         var portKey = $"{evt.Node}.{evt.Port}";
 
@@ -340,7 +333,6 @@ public partial class MainWindow : Window
             affectedEdges.AddRange(portEdges);
         }
 
-        // 3. ПРИМЕНЕНИЕ СТИЛЯ К РЕБРАМ
         bool isDataEvent = evt.Event == "send" || evt.Event == "initial_token";
         foreach (var edge in affectedEdges)
         {
@@ -355,7 +347,6 @@ public partial class MainWindow : Window
 
         _viewer.Invalidate();
 
-        // 4. ТАЙМИНГИ АНИМАЦИИ
         int baseFlashMs = 200;
 
         int flashDelay = (int)(baseFlashMs / _playbackSpeed);
@@ -397,7 +388,6 @@ public partial class MainWindow : Window
 
         await Task.Delay(flashDelay);
 
-        // 5. ВОССТАНОВЛЕНИЕ ИСХОДНОГО СОСТОЯНИЯ
         node.Attr.FillColor = originalNodeColor;
         node.Attr.Color = Microsoft.Msagl.Drawing.Color.Black;
         node.Attr.LineWidth = 1;
@@ -421,10 +411,8 @@ public partial class MainWindow : Window
     {
         return evt switch
         {
-            // goroutine lifecycle
             "goroutine_start" => Microsoft.Msagl.Drawing.Color.MediumPurple,
 
-            // data flow
             "initial_token" => Microsoft.Msagl.Drawing.Color.MediumSeaGreen,
 
             "send" => Microsoft.Msagl.Drawing.Color.DeepSkyBlue,
@@ -433,7 +421,6 @@ public partial class MainWindow : Window
 
             "dropped" => Microsoft.Msagl.Drawing.Color.DimGray,
 
-            // shutdown / close
             "port_closed" => Microsoft.Msagl.Drawing.Color.Red,
 
             "node_stop" => Microsoft.Msagl.Drawing.Color.DarkRed,

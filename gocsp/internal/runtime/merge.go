@@ -8,11 +8,7 @@ import (
 	"gocsp/internal/model"
 )
 
-func runMerge(
-	appCtx context.Context,
-	node model.Node,
-	ctx *ProcessContext,
-) {
+func runMerge(appCtx context.Context, node model.Node, procCtx *ProcessContext) {
 
 	var cases []reflect.SelectCase
 
@@ -25,7 +21,7 @@ func runMerge(
 
 	for _, port := range node.Inputs {
 
-		ch := ctx.Inputs[port]
+		ch := procCtx.Inputs[port]
 
 		cases = append(cases,
 			reflect.SelectCase{
@@ -53,7 +49,7 @@ func runMerge(
             })
         }
 
-		for port, outputs := range ctx.Outputs {
+		for port, outputs := range procCtx.Outputs {
 			logger.Log(logger.Event{
 				Event: "port_closed",
 				Node:  node.ID,
@@ -92,7 +88,7 @@ func runMerge(
 		})
 
 	outer:
-		for outPort, outputs := range ctx.Outputs {
+		for outPort, outputs := range procCtx.Outputs {
 
 			logger.Log(logger.Event{
 				Event: "send",
