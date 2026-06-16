@@ -76,14 +76,14 @@ public partial class MainWindow : Window
         try
         {
             string projectRoot = Path.GetFullPath(
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "..", "gocsp")
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "..", "..", "gocsp_backend")
             );
             string relativeJsonPath = Path.GetRelativePath(projectRoot, diagramPath);
 
             ProcessStartInfo gocspInfo = new()
             {
                 FileName = "go",
-                Arguments = $"run ./cmd/gocsp \"{relativeJsonPath}\"",
+                Arguments = $"run ./cmd/app \"{relativeJsonPath}\"",
                 WorkingDirectory = projectRoot,
                 CreateNoWindow = true,
                 UseShellExecute = false,
